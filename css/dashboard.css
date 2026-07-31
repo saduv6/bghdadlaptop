@@ -117,6 +117,15 @@ textarea.form-control { resize: vertical; min-height: 80px; }
 .modal-body { padding: var(--space-3); }
 .modal-footer { padding: var(--space-2) var(--space-3); border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 0.5rem; }
 
+/* Color scheme swatches */
+.color-swatch {
+  padding: 0.7rem 0.5rem; border-radius: var(--radius-sm); border: 2px solid transparent;
+  font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.15s; text-align: center;
+  font-family: inherit;
+}
+.color-swatch:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+.color-swatch.active { border-color: var(--primary-900); box-shadow: 0 0 0 2px var(--primary-200); }
+
 /* Responsive */
 @media (max-width: 900px) {
   .sidebar { transform: translateX(-100%); }

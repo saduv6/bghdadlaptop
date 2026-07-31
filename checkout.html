@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-color-scheme="mono">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Checkout — Nexus Laptops</title>
+  <title>Checkout — BaghdadLaptop</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -11,11 +11,20 @@
   <link rel="stylesheet" href="/css/checkout.css" />
 </head>
 <body>
+  <!-- Moving marquee bar -->
+  <div class="marquee-bar" id="marqueeBar">
+    <div class="marquee-track" id="marqueeTrack">
+      <span id="mq1">Free delivery across Baghdad</span>
+      <span id="mq2">Cash on Delivery available</span>
+      <span id="mq3">7-day money-back guarantee</span>
+    </div>
+  </div>
+
   <header class="site-header">
     <div class="container">
-      <a href="/" class="logo">
-        <span class="logo-mark">N</span>
-        <span>Nexus<span style="color:var(--accent-400)">Laptops</span></span>
+      <a href="/" class="logo" id="siteLogo">
+        <span class="logo-mark">B</span>
+        <span>Baghdad<span style="color:var(--accent-400)">Laptop</span></span>
       </a>
       <nav class="nav-links">
         <a href="/">Continue Shopping</a>
@@ -64,7 +73,7 @@
             <form id="shippingForm" novalidate>
               <div class="form-group">
                 <label for="fullName">Full Name *</label>
-                <input class="form-control" type="text" id="fullName" name="fullName" required placeholder="Aarav Sharma" />
+                <input class="form-control" type="text" id="fullName" name="fullName" required placeholder="Ahmed Ali" />
               </div>
               <div class="form-row">
                 <div class="form-group">
@@ -73,7 +82,7 @@
                 </div>
                 <div class="form-group">
                   <label for="phone">Phone *</label>
-                  <input class="form-control" type="tel" id="phone" name="phone" required placeholder="9876543210" pattern="[0-9+\s-]{8,15}" />
+                  <input class="form-control" type="tel" id="phone" name="phone" required placeholder="07701234567" pattern="[0-9+\s-]{8,15}" />
                 </div>
               </div>
               <div class="form-group">
@@ -83,11 +92,11 @@
               <div class="form-row">
                 <div class="form-group">
                   <label for="city">City *</label>
-                  <input class="form-control" type="text" id="city" name="city" required placeholder="Mumbai" />
+                  <input class="form-control" type="text" id="city" name="city" required placeholder="Baghdad" />
                 </div>
                 <div class="form-group">
-                  <label for="pincode">Pincode *</label>
-                  <input class="form-control" type="text" id="pincode" name="pincode" required placeholder="400001" pattern="[0-9]{4,8}" />
+                  <label for="pincode">Postal Code *</label>
+                  <input class="form-control" type="text" id="pincode" name="pincode" required placeholder="10001" pattern="[0-9]{4,8}" />
                 </div>
               </div>
               <div class="form-group">
@@ -116,7 +125,7 @@
               <div class="confirm-icon">&#10004;</div>
               <h2>Order Confirmed!</h2>
               <p style="color:var(--text-muted)">Thank you for your purchase. We'll call you shortly to confirm delivery.</p>
-              <div class="order-number" id="orderNumber">LS-XXXXXX</div>
+              <div class="order-number" id="orderNumber">BL-XXXXXX</div>
             </div>
             <div class="confirm-details" id="confirmDetails"></div>
             <div style="text-align:center;margin-top:var(--space-2)">

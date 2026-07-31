@@ -1,5 +1,5 @@
 import { getCart, cartSubtotal, cartCount, clearCart, DELIVERY_FEE } from "./cart.js";
-import { createOrder } from "./api.js";
+import { createOrder, fetchSettings } from "./api.js";
 
 const reviewItems = document.getElementById("reviewItems");
 const summaryItems = document.getElementById("summaryItems");
@@ -11,6 +11,7 @@ const toastEl = document.getElementById("toast");
 
 let currentStep = 1;
 let placedOrder = null;
+let deliveryFee = DELIVERY_FEE;
 
 function formatPrice(n) {
   return "\u20B9" + n.toLocaleString("en-IN");
@@ -20,6 +21,34 @@ function showToast(msg, type = "") {
   toastEl.textContent = msg;
   toastEl.className = "toast show " + type;
   setTimeout(() => (toastEl.className = "toast"), 2500);
+}
+
+function applySettings(s) {
+  if (!s) return;
+  if (s.color_scheme) document.documentElement.setAttribute("data-color-scheme", s.color_scheme);
+
+  const logoEl = document.getElementById("siteLogo");
+  if (s.logo_url) {
+    logoEl.innerHTML = `<img class="logo-img" src="${s.logo_url}" alt="${s.site_name || "BaghdadLaptop"}" />`;
+  } else {
+    const name = s.site_name || "BaghdadLaptop";
+    logoEl.innerHTML = `<span class="logo-mark">${name.charAt(0)}</span><span>${name}</span>`;
+  }
+
+  const marqueeBar = document.getElementById("marqueeBar");
+  if (s.marquee_enabled === false) {
+    marqueeBar.style.display = "none";
+  } else {
+    marqueeBar.style.display = "block";
+    document.getElementById("mq1").textContent = s.marquee_text_1 || "";
+    document.getElementById("mq2").textContent = s.marquee_text_2 || "";
+    document.getElementById("mq3").textContent = s.marquee_text_3 || "";
+  }
+
+  if (s.delivery_fee) {
+    deliveryFee = Number(s.delivery_fee);
+    sumDelivery.textContent = formatPrice(deliveryFee);
+  }
 }
 
 function renderReview() {
@@ -51,10 +80,10 @@ function renderReview() {
 function renderSummary() {
   const cart = getCart();
   const subtotal = cartSubtotal();
-  const total = subtotal + DELIVERY_FEE;
+  const total = subtotal + deliveryFee;
   sumItems.textContent = cartCount() + (cartCount() === 1 ? " item" : " items");
   sumSubtotal.textContent = formatPrice(subtotal);
-  sumDelivery.textContent = formatPrice(DELIVERY_FEE);
+  sumDelivery.textContent = formatPrice(deliveryFee);
   sumTotal.textContent = formatPrice(total);
   summaryItems.innerHTML = "";
   cart.forEach((item) => {
@@ -111,7 +140,7 @@ async function handlePlaceOrder() {
   const form = document.getElementById("shippingForm");
   const formData = Object.fromEntries(new FormData(form).entries());
   const subtotal = cartSubtotal();
-  const total = subtotal + DELIVERY_FEE;
+  const total = subtotal + deliveryFee;
 
   const order = {
     customer: {
@@ -125,7 +154,7 @@ async function handlePlaceOrder() {
     },
     items: cart.map((i) => ({ id: i.id, name: i.name, price: i.price, qty: i.qty })),
     subtotal,
-    deliveryFee: DELIVERY_FEE,
+    deliveryFee,
     total,
     paymentMethod: "COD",
     status: "Pending",
@@ -148,7 +177,7 @@ async function handlePlaceOrder() {
 
 function renderConfirmation() {
   if (!placedOrder) return;
-  document.getElementById("orderNumber").textContent = placedOrder.orderNumber || placedOrder.id || "LS-" + Date.now().toString(36).toUpperCase();
+  document.getElementById("orderNumber").textContent = placedOrder.orderNumber || placedOrder.id || "BL-" + Date.now().toString(36).toUpperCase();
   const c = placedOrder.customer || {};
   document.getElementById("confirmDetails").innerHTML = `
     <div class="confirm-detail-row"><span class="label">Name</span><span class="value">${c.name || ""}</span></div>
@@ -165,5 +194,9 @@ document.getElementById("toStep2").addEventListener("click", () => goToStep(2));
 document.getElementById("backTo1").addEventListener("click", () => goToStep(1));
 document.getElementById("placeOrder").addEventListener("click", handlePlaceOrder);
 
-renderReview();
-renderSummary();
+(async () => {
+  const settings = await fetchSettings();
+  applySettings(settings);
+  renderReview();
+  renderSummary();
+})();
