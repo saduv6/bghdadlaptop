@@ -1,7 +1,7 @@
-import { adminLogin, fetchOrders, fetchCustomers, fetchProducts, updateOrderStatus, saveProduct, deleteProduct, fetchSettings, saveSettings } from "./api.js";
-import { sampleProducts } from "./sample-data.js";
+import { adminLogin, fetchOrders, fetchCustomers, fetchProducts, updateOrderStatus, saveProduct, deleteProduct } from "./api.js";
+import { sampleOrders, sampleCustomers, sampleProducts } from "./sample-data.js";
 
-const SESSION_KEY = "bl_admin_session";
+const SESSION_KEY = "ls_admin_session";
 const toastEl = document.getElementById("toast");
 
 let state = {
@@ -10,9 +10,6 @@ let state = {
   products: [],
   editingOrderId: null,
   editingProductId: null,
-  settings: null,
-  selectedScheme: "mono",
-  logoDataUrl: null,
 };
 
 function formatPrice(n) {
@@ -79,8 +76,7 @@ const sectionTitles = {
   orders: "Orders",
   customers: "Customers",
   products: "Products",
-  appearance: "Appearance",
-  contact: "Contact Info",
+  settings: "Settings",
 };
 
 function switchSection(name) {
@@ -104,28 +100,20 @@ document.getElementById("hamburger").addEventListener("click", () => {
 
 /* ---------- Data loading ---------- */
 async function loadAllData() {
+  // Orders
   let orders = await fetchOrders();
-  state.orders = orders && orders.length ? orders : [];
-
+  state.orders = orders && orders.length ? orders : [...sampleOrders];
+  // Customers
   let customers = await fetchCustomers();
-  state.customers = customers && customers.length ? customers : [];
-
+  state.customers = customers && customers.length ? customers : [...sampleCustomers];
+  // Products
   let products = await fetchProducts();
   state.products = products && products.length ? products : [...sampleProducts];
-
-  const settings = await fetchSettings();
-  state.settings = settings;
-  if (settings) {
-    state.selectedScheme = settings.color_scheme || "mono";
-    state.logoDataUrl = settings.logo_url || null;
-  }
 
   renderOverview();
   renderOrders();
   renderCustomers();
   renderProducts();
-  renderSettingsForms();
-  applySettingsLocally();
 }
 
 /* ---------- Overview ---------- */
@@ -156,8 +144,8 @@ function renderOverview() {
   const recent = [...state.orders].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5);
   document.getElementById("recentOrdersBody").innerHTML = recent.map((o) => `
     <tr>
-      <td><strong>${o.orderNumber || o.id || "—"}</strong></td>
-      <td>${o.customer || "—"}</td>
+      <td><strong>${o.id || o.orderNumber || "—"}</strong></td>
+      <td>${o.customer || (o.customer && o.customer.name) || "—"}</td>
       <td>${formatDate(o.date)}</td>
       <td>${formatPrice(o.total)}</td>
       <td>${statusBadge(o.status)}</td>
@@ -176,7 +164,7 @@ function renderOrders(filter = "") {
   if (filter) {
     const f = filter.toLowerCase();
     orders = orders.filter((o) =>
-      (o.orderNumber || o.id || "").toLowerCase().includes(f) ||
+      (o.id || o.orderNumber || "").toLowerCase().includes(f) ||
       (o.customer || "").toLowerCase().includes(f) ||
       (o.email || "").toLowerCase().includes(f)
     );
@@ -187,7 +175,7 @@ function renderOrders(filter = "") {
   }
   body.innerHTML = orders.map((o) => `
     <tr>
-      <td><strong>${o.orderNumber || o.id || "—"}</strong></td>
+      <td><strong>${o.id || o.orderNumber || "—"}</strong></td>
       <td>${o.customer || "—"}<br><span style="font-size:0.78rem;color:var(--text-muted)">${o.email || ""}</span></td>
       <td>${formatDate(o.date)}</td>
       <td>${formatPrice(o.total)}</td>
@@ -281,9 +269,7 @@ function renderProducts() {
   body.querySelectorAll("[data-delete-product]").forEach((btn) => {
     btn.addEventListener("click", async () => {
       if (!confirm("Delete this product? This cannot be undone.")) return;
-      try {
-        await deleteProduct(btn.dataset.deleteProduct);
-      } catch { /* ignore — update locally anyway */ }
+      await deleteProduct(btn.dataset.deleteProduct);
       state.products = state.products.filter((p) => p.id !== btn.dataset.deleteProduct);
       renderProducts();
       showToast("Product deleted", "success");
@@ -333,12 +319,9 @@ document.getElementById("saveProduct").addEventListener("click", async () => {
   const image = document.getElementById("prodImage").value.trim();
   if (!name || !brand) { showToast("Name and brand are required", "error"); return; }
 
-  const id = state.editingProductId || null;
+  const id = state.editingProductId || "p" + Date.now().toString(36);
   const product = { id, name, brand, price, stock, status, specs, image };
-  try {
-    const saved = await saveProduct(product);
-    if (saved && saved.id) product.id = saved.id;
-  } catch { /* ignore — update locally */ }
+  await saveProduct(product);
   if (state.editingProductId) {
     const idx = state.products.findIndex((p) => p.id === id);
     if (idx >= 0) state.products[idx] = product;
@@ -350,149 +333,12 @@ document.getElementById("saveProduct").addEventListener("click", async () => {
   showToast(state.editingProductId ? "Product updated" : "Product added", "success");
 });
 
-/* ---------- Settings: Appearance & Contact ---------- */
-function renderSettingsForms() {
-  const s = state.settings;
-  if (!s) return;
-
-  document.getElementById("settingSiteName").value = s.site_name || "BaghdadLaptop";
-  document.getElementById("settingDeliveryFee").value = s.delivery_fee || 150;
-  document.getElementById("marqueeEnabled").checked = s.marquee_enabled !== false;
-  document.getElementById("settingMarquee1").value = s.marquee_text_1 || "";
-  document.getElementById("settingMarquee2").value = s.marquee_text_2 || "";
-  document.getElementById("settingMarquee3").value = s.marquee_text_3 || "";
-
-  document.getElementById("settingPhone1").value = s.contact_phone_1 || "";
-  document.getElementById("settingPhone2").value = s.contact_phone_2 || "";
-  document.getElementById("settingEmail1").value = s.contact_email_1 || "";
-  document.getElementById("settingEmail2").value = s.contact_email_2 || "";
-  document.getElementById("settingAddress").value = s.contact_address || "";
-  document.getElementById("settingFb").value = s.social_facebook || "";
-  document.getElementById("settingIg").value = s.social_instagram || "";
-  document.getElementById("settingWa").value = s.social_whatsapp || "";
-  document.getElementById("settingTg").value = s.social_telegram || "";
-
-  // Color scheme swatches
-  state.selectedScheme = s.color_scheme || "mono";
-  document.querySelectorAll(".color-swatch").forEach((sw) => {
-    sw.classList.toggle("active", sw.dataset.scheme === state.selectedScheme);
-  });
-
-  // Logo preview
-  updateLogoPreview();
-}
-
-function updateLogoPreview() {
-  const preview = document.getElementById("logoPreview");
-  if (state.logoDataUrl) {
-    preview.innerHTML = `<img src="${state.logoDataUrl}" style="width:100%;height:100%;object-fit:contain" alt="Logo preview" />`;
-  } else {
-    preview.innerHTML = `<span style="font-size:1.5rem;color:var(--text-muted)">B</span>`;
-  }
-}
-
-// Color scheme selection
-document.querySelectorAll(".color-swatch").forEach((sw) => {
-  sw.addEventListener("click", () => {
-    state.selectedScheme = sw.dataset.scheme;
-    document.querySelectorAll(".color-swatch").forEach((s) => s.classList.toggle("active", s === sw));
-    document.documentElement.setAttribute("data-color-scheme", state.selectedScheme);
-  });
+/* ---------- Settings ---------- */
+document.getElementById("saveSettings").addEventListener("click", () => {
+  const fee = document.getElementById("settingDeliveryFee").value;
+  localStorage.setItem("ls_delivery_fee", fee);
+  showToast("Settings saved locally", "success");
 });
-
-// Logo file upload
-document.getElementById("logoFile").addEventListener("change", (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-  if (file.size > 2 * 1024 * 1024) {
-    showToast("Logo must be under 2MB", "error");
-    return;
-  }
-  const reader = new FileReader();
-  reader.onload = (ev) => {
-    state.logoDataUrl = ev.target.result;
-    updateLogoPreview();
-  };
-  reader.readAsDataURL(file);
-});
-
-document.getElementById("removeLogo").addEventListener("click", () => {
-  state.logoDataUrl = null;
-  document.getElementById("logoFile").value = "";
-  updateLogoPreview();
-});
-
-// Save appearance
-document.getElementById("saveAppearance").addEventListener("click", async () => {
-  const btn = document.getElementById("saveAppearance");
-  btn.disabled = true;
-  btn.textContent = "Saving...";
-  try {
-    const updates = {
-      site_name: document.getElementById("settingSiteName").value.trim() || "BaghdadLaptop",
-      color_scheme: state.selectedScheme,
-      marquee_enabled: document.getElementById("marqueeEnabled").checked,
-      marquee_text_1: document.getElementById("settingMarquee1").value.trim(),
-      marquee_text_2: document.getElementById("settingMarquee2").value.trim(),
-      marquee_text_3: document.getElementById("settingMarquee3").value.trim(),
-      delivery_fee: parseFloat(document.getElementById("settingDeliveryFee").value) || 150,
-      logo_url: state.logoDataUrl || null,
-    };
-    const saved = await saveSettings(updates);
-    state.settings = saved || { ...state.settings, ...updates };
-    applySettingsLocally();
-    showToast("Appearance saved", "success");
-  } catch {
-    showToast("Failed to save. Please try again.", "error");
-  } finally {
-    btn.disabled = false;
-    btn.textContent = "Save Changes";
-  }
-});
-
-// Save contact info
-document.getElementById("saveContact").addEventListener("click", async () => {
-  const btn = document.getElementById("saveContact");
-  btn.disabled = true;
-  btn.textContent = "Saving...";
-  try {
-    const updates = {
-      contact_phone_1: document.getElementById("settingPhone1").value.trim(),
-      contact_phone_2: document.getElementById("settingPhone2").value.trim(),
-      contact_email_1: document.getElementById("settingEmail1").value.trim(),
-      contact_email_2: document.getElementById("settingEmail2").value.trim(),
-      contact_address: document.getElementById("settingAddress").value.trim(),
-      social_facebook: document.getElementById("settingFb").value.trim(),
-      social_instagram: document.getElementById("settingIg").value.trim(),
-      social_whatsapp: document.getElementById("settingWa").value.trim(),
-      social_telegram: document.getElementById("settingTg").value.trim(),
-    };
-    const saved = await saveSettings(updates);
-    state.settings = saved || { ...state.settings, ...updates };
-    showToast("Contact info saved", "success");
-  } catch {
-    showToast("Failed to save. Please try again.", "error");
-  } finally {
-    btn.disabled = false;
-    btn.textContent = "Save Contact Info";
-  }
-});
-
-/* Apply settings to the dashboard itself for live preview */
-function applySettingsLocally() {
-  const s = state.settings;
-  if (!s) return;
-  document.documentElement.setAttribute("data-color-scheme", s.color_scheme || "mono");
-  const brand = document.querySelector(".sidebar-brand");
-  if (brand) {
-    const name = s.site_name || "BaghdadLaptop";
-    if (s.logo_url) {
-      brand.innerHTML = `<img src="${s.logo_url}" style="max-height:32px;max-width:140px;object-fit:contain" alt="${name}" />`;
-    } else {
-      brand.innerHTML = `<span class="logo-mark" style="width:28px;height:28px;font-size:0.9rem">${name.charAt(0)}</span><span>${name}</span>`;
-    }
-  }
-}
 
 /* ---------- Init ---------- */
 if (isLoggedIn()) {

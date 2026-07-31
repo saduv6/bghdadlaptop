@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" data-color-scheme="mono">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard — BaghdadLaptop</title>
+  <title>Admin Dashboard — Nexus Laptops</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -16,19 +16,22 @@
   <div id="loginScreen" class="login-screen">
     <div class="login-card">
       <div class="login-logo">
-        <div class="logo-mark">B</div>
-        <h1>Staff Login</h1>
-        <p class="sub">BaghdadLaptop Dashboard</p>
+        <div class="logo-mark">N</div>
+        <h1>Admin Login</h1>
+        <p class="sub">Nexus Laptops Dashboard</p>
+      </div>
+      <div class="alert alert-info" id="loginHint">
+        Demo credentials: <strong>admin</strong> / <strong>admin123</strong>
       </div>
       <div class="alert alert-error" id="loginError" style="display:none"></div>
       <form id="loginForm">
         <div class="form-group">
           <label for="username">Username</label>
-          <input class="form-control" type="text" id="username" required placeholder="Enter username" autocomplete="username" />
+          <input class="form-control" type="text" id="username" required placeholder="admin" autocomplete="username" />
         </div>
         <div class="form-group">
           <label for="password">Password</label>
-          <input class="form-control" type="password" id="password" required placeholder="Enter password" autocomplete="current-password" />
+          <input class="form-control" type="password" id="password" required placeholder="••••••••" autocomplete="current-password" />
         </div>
         <button class="btn btn-primary btn-block" type="submit" id="loginBtn">Sign In</button>
       </form>
@@ -43,16 +46,15 @@
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-brand">
-        <span class="logo-mark" style="width:28px;height:28px;font-size:0.9rem">B</span>
-        <span>BaghdadLaptop</span>
+        <span class="logo-mark" style="width:28px;height:28px;font-size:0.9rem">N</span>
+        <span>Nexus Admin</span>
       </div>
       <nav class="sidebar-nav" id="sidebarNav">
         <a href="#" data-section="overview" class="active"><span class="icon">&#9632;</span> Dashboard</a>
         <a href="#" data-section="orders"><span class="icon">&#9776;</span> Orders</a>
         <a href="#" data-section="customers"><span class="icon">&#9679;</span> Customers</a>
         <a href="#" data-section="products"><span class="icon">&#9635;</span> Products</a>
-        <a href="#" data-section="appearance"><span class="icon">&#9881;</span> Appearance</a>
-        <a href="#" data-section="contact"><span class="icon">&#9742;</span> Contact Info</a>
+        <a href="#" data-section="settings"><span class="icon">&#9881;</span> Settings</a>
       </nav>
       <div class="sidebar-footer">
         <button class="btn btn-ghost btn-sm" id="logoutBtn">Sign Out</button>
@@ -66,8 +68,8 @@
         <h1 id="pageTitle">Dashboard</h1>
         <div class="topbar-right">
           <div class="admin-chip">
-            <div class="admin-avatar">B</div>
-            <span>staff</span>
+            <div class="admin-avatar">A</div>
+            <span>admin</span>
           </div>
         </div>
       </div>
@@ -141,116 +143,33 @@
           </div>
         </section>
 
-        <!-- Appearance settings -->
-        <section class="dash-section" id="sec-appearance">
-          <div class="card" style="max-width:640px">
-            <div class="card-header"><h2>Appearance & Branding</h2></div>
+        <!-- Settings -->
+        <section class="dash-section" id="sec-settings">
+          <div class="card" style="max-width:560px">
+            <div class="card-header"><h2>Store Settings</h2></div>
             <div class="modal-body" style="padding:var(--space-3)">
               <div class="form-group">
-                <label>Site Name</label>
-                <input class="form-control" type="text" id="settingSiteName" value="BaghdadLaptop" />
+                <label>Store Name</label>
+                <input class="form-control" type="text" value="Nexus Laptops" />
               </div>
-
-              <div class="form-group">
-                <label>Logo</label>
-                <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:0.4rem">Upload an image file to use as your logo. It will replace the "B" badge in the header.</p>
-                <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
-                  <div id="logoPreview" style="width:64px;height:64px;border:2px dashed var(--border);border-radius:8px;display:grid;place-items:center;overflow:hidden">
-                    <span style="font-size:1.5rem;color:var(--text-muted)">B</span>
-                  </div>
-                  <div>
-                    <input type="file" id="logoFile" accept="image/*" style="font-size:0.85rem" />
-                    <button class="btn btn-ghost btn-sm" id="removeLogo" style="margin-top:0.4rem">Remove logo</button>
-                  </div>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label>Color Scheme</label>
-                <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:0.5rem">Choose the accent color for buttons, links, and highlights across the site.</p>
-                <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:0.6rem" id="colorSchemeGrid">
-                  <button class="color-swatch active" data-scheme="mono" style="background:#0a0a0a;color:#fff">Black & White</button>
-                  <button class="color-swatch" data-scheme="midnight" style="background:#1a2e4f;color:#fff">Midnight</button>
-                  <button class="color-swatch" data-scheme="forest" style="background:#15803d;color:#fff">Forest</button>
-                  <button class="color-swatch" data-scheme="crimson" style="background:#b91c1c;color:#fff">Crimson</button>
-                  <button class="color-swatch" data-scheme="sand" style="background:#57534e;color:#fff">Sand</button>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label>Marquee Bar (moving text at top)</label>
-                <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem">
-                  <input type="checkbox" id="marqueeEnabled" checked />
-                  <span style="font-size:0.88rem">Show marquee bar</span>
-                </div>
-                <input class="form-control" type="text" id="settingMarquee1" placeholder="Sentence 1" style="margin-bottom:0.4rem" />
-                <input class="form-control" type="text" id="settingMarquee2" placeholder="Sentence 2" style="margin-bottom:0.4rem" />
-                <input class="form-control" type="text" id="settingMarquee3" placeholder="Sentence 3" />
-              </div>
-
-              <div class="form-group">
-                <label>Delivery Fee (&#8377;)</label>
-                <input class="form-control" type="number" id="settingDeliveryFee" value="150" min="0" />
-              </div>
-
-              <button class="btn btn-primary" id="saveAppearance">Save Changes</button>
-            </div>
-          </div>
-        </section>
-
-        <!-- Contact info settings -->
-        <section class="dash-section" id="sec-contact">
-          <div class="card" style="max-width:640px">
-            <div class="card-header"><h2>Contact Information</h2></div>
-            <div class="modal-body" style="padding:var(--space-3)">
-              <h3 style="margin-bottom:var(--space-1);font-size:1rem">Phone Numbers</h3>
               <div class="form-row">
                 <div class="form-group">
-                  <label>Phone 1</label>
-                  <input class="form-control" type="text" id="settingPhone1" placeholder="+964 770 000 0000" />
+                  <label>Delivery Fee (&#8377;)</label>
+                  <input class="form-control" type="number" id="settingDeliveryFee" value="150" />
                 </div>
                 <div class="form-group">
-                  <label>Phone 2</label>
-                  <input class="form-control" type="text" id="settingPhone2" placeholder="+964 750 000 0000" />
+                  <label>Currency</label>
+                  <input class="form-control" type="text" value="INR (&#8377;)" disabled />
                 </div>
               </div>
-
-              <h3 style="margin:var(--space-2) 0 var(--space-1);font-size:1rem">Email Addresses</h3>
-              <div class="form-row">
-                <div class="form-group">
-                  <label>Email 1</label>
-                  <input class="form-control" type="email" id="settingEmail1" placeholder="info@baghdadlaptop.com" />
-                </div>
-                <div class="form-group">
-                  <label>Email 2</label>
-                  <input class="form-control" type="email" id="settingEmail2" placeholder="support@baghdadlaptop.com" />
-                </div>
-              </div>
-
-              <h3 style="margin:var(--space-2) 0 var(--space-1);font-size:1rem">Address</h3>
               <div class="form-group">
-                <input class="form-control" type="text" id="settingAddress" placeholder="Street, City, Iraq" />
+                <label>Payment Method</label>
+                <input class="form-control" type="text" value="Cash on Delivery only" disabled />
               </div>
-
-              <h3 style="margin:var(--space-2) 0 var(--space-1);font-size:1rem">Social Media Links</h3>
-              <div class="form-group">
-                <label>Facebook URL</label>
-                <input class="form-control" type="url" id="settingFb" placeholder="https://facebook.com/..." />
+              <div class="alert alert-info" style="margin-top:var(--space-2)">
+                These settings are stored locally for now. Connect MongoDB Atlas to persist them across devices.
               </div>
-              <div class="form-group">
-                <label>Instagram URL</label>
-                <input class="form-control" type="url" id="settingIg" placeholder="https://instagram.com/..." />
-              </div>
-              <div class="form-group">
-                <label>WhatsApp Number</label>
-                <input class="form-control" type="text" id="settingWa" placeholder="+9647700000000" />
-              </div>
-              <div class="form-group">
-                <label>Telegram URL</label>
-                <input class="form-control" type="url" id="settingTg" placeholder="https://t.me/..." />
-              </div>
-
-              <button class="btn btn-primary" id="saveContact">Save Contact Info</button>
+              <button class="btn btn-primary" id="saveSettings">Save Settings</button>
             </div>
           </div>
         </section>

@@ -1,6 +1,10 @@
 [build]
   publish = "dist"
   command = "npm run build"
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
 
 # SPA-style routing so /checkout and /dashboard resolve to their HTML files
 [[redirects]]
@@ -11,4 +15,10 @@
 [[redirects]]
   from = "/dashboard"
   to = "/dashboard.html"
+  status = 200
+
+# Clean API URLs: /api/products -> /.netlify/functions/products
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
   status = 200

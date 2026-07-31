@@ -1,4 +1,4 @@
-import { fetchProducts, fetchSettings } from "./api.js";
+import { fetchProducts } from "./api.js";
 import { getCart, addToCart, updateQty, removeFromCart, cartCount, cartSubtotal, DELIVERY_FEE } from "./cart.js";
 
 const grid = document.getElementById("productGrid");
@@ -113,56 +113,6 @@ function closeCart() {
   cartOverlay.classList.remove("open");
 }
 
-/* ---------- Apply site settings ---------- */
-function applySettings(s) {
-  if (!s) return;
-
-  // Color scheme
-  if (s.color_scheme) {
-    document.documentElement.setAttribute("data-color-scheme", s.color_scheme);
-  }
-
-  // Site name + logo
-  const logoEl = document.getElementById("siteLogo");
-  if (s.logo_url) {
-    logoEl.innerHTML = `<img class="logo-img" src="${s.logo_url}" alt="${s.site_name || "BaghdadLaptop"}" />`;
-  } else {
-    const name = s.site_name || "BaghdadLaptop";
-    logoEl.innerHTML = `<span class="logo-mark">${name.charAt(0)}</span><span>${name}</span>`;
-  }
-
-  // Marquee
-  const marqueeBar = document.getElementById("marqueeBar");
-  if (s.marquee_enabled === false) {
-    marqueeBar.style.display = "none";
-  } else {
-    marqueeBar.style.display = "block";
-    document.getElementById("mq1").textContent = s.marquee_text_1 || "";
-    document.getElementById("mq2").textContent = s.marquee_text_2 || "";
-    document.getElementById("mq3").textContent = s.marquee_text_3 || "";
-  }
-
-  // Footer contact info
-  if (s.contact_phone_1) document.getElementById("footerPhone1").innerHTML = `&#9742; <span>${s.contact_phone_1}</span>`;
-  if (s.contact_phone_2) document.getElementById("footerPhone2").innerHTML = `&#9742; <span>${s.contact_phone_2}</span>`;
-  if (s.contact_email_1) document.getElementById("footerEmail1").innerHTML = `&#9993; <span>${s.contact_email_1}</span>`;
-  if (s.contact_email_2) document.getElementById("footerEmail2").innerHTML = `&#9993; <span>${s.contact_email_2}</span>`;
-  if (s.contact_address) document.getElementById("footerAddress").innerHTML = `&#127968; <span>${s.contact_address}</span>`;
-
-  // Social links
-  const fb = document.getElementById("socialFb");
-  const ig = document.getElementById("socialIg");
-  const wa = document.getElementById("socialWa");
-  const tg = document.getElementById("socialTg");
-  if (s.social_facebook) { fb.href = s.social_facebook; fb.style.display = "grid"; }
-  if (s.social_instagram) { ig.href = s.social_instagram; ig.style.display = "grid"; }
-  if (s.social_whatsapp) { wa.href = `https://wa.me/${s.social_whatsapp.replace(/[^0-9]/g, "")}`; wa.style.display = "grid"; }
-  if (s.social_telegram) { tg.href = s.social_telegram; tg.style.display = "grid"; }
-
-  // Copyright
-  document.getElementById("footerCopyright").innerHTML = `&copy; ${new Date().getFullYear()} ${s.site_name || "BaghdadLaptop"}. All rights reserved.`;
-}
-
 // Mobile menu
 document.getElementById("menuToggle")?.addEventListener("click", () => {
   document.getElementById("navLinks").classList.toggle("open");
@@ -178,8 +128,7 @@ window.addEventListener("cart:change", renderCart);
 // Initial load
 (async () => {
   try {
-    const [products, settings] = await Promise.all([fetchProducts(), fetchSettings()]);
-    applySettings(settings);
+    const products = await fetchProducts();
     renderProducts(products);
   } catch {
     grid.innerHTML = `<div class="empty-state"><div class="big">&#9888;</div>Couldn't load products. Please refresh.</div>`;
