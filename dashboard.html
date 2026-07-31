@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard — Nexus Laptops</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="stylesheet" href="/css/dashboard.css" />
+</head>
+<body class="dashboard-body">
+
+  <!-- Login screen -->
+  <div id="loginScreen" class="login-screen">
+    <div class="login-card">
+      <div class="login-logo">
+        <div class="logo-mark">N</div>
+        <h1>Admin Login</h1>
+        <p class="sub">Nexus Laptops Dashboard</p>
+      </div>
+      <div class="alert alert-info" id="loginHint">
+        Demo credentials: <strong>admin</strong> / <strong>admin123</strong>
+      </div>
+      <div class="alert alert-error" id="loginError" style="display:none"></div>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input class="form-control" type="text" id="username" required placeholder="admin" autocomplete="username" />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input class="form-control" type="password" id="password" required placeholder="••••••••" autocomplete="current-password" />
+        </div>
+        <button class="btn btn-primary btn-block" type="submit" id="loginBtn">Sign In</button>
+      </form>
+      <p style="text-align:center;margin-top:var(--space-2);font-size:0.82rem;color:var(--text-muted)">
+        <a href="/">&larr; Back to store</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- Dashboard layout -->
+  <div id="dashLayout" class="dash-layout" style="display:none">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <span class="logo-mark" style="width:28px;height:28px;font-size:0.9rem">N</span>
+        <span>Nexus Admin</span>
+      </div>
+      <nav class="sidebar-nav" id="sidebarNav">
+        <a href="#" data-section="overview" class="active"><span class="icon">&#9632;</span> Dashboard</a>
+        <a href="#" data-section="orders"><span class="icon">&#9776;</span> Orders</a>
+        <a href="#" data-section="customers"><span class="icon">&#9679;</span> Customers</a>
+        <a href="#" data-section="products"><span class="icon">&#9635;</span> Products</a>
+        <a href="#" data-section="settings"><span class="icon">&#9881;</span> Settings</a>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="btn btn-ghost btn-sm" id="logoutBtn">Sign Out</button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="dash-main">
+      <div class="dash-topbar">
+        <button class="hamburger" id="hamburger">&#9776;</button>
+        <h1 id="pageTitle">Dashboard</h1>
+        <div class="topbar-right">
+          <div class="admin-chip">
+            <div class="admin-avatar">A</div>
+            <span>admin</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dash-content">
+        <!-- Overview -->
+        <section class="dash-section active" id="sec-overview">
+          <div class="stat-grid" id="statGrid"></div>
+          <div class="card">
+            <div class="card-header"><h2>Recent Orders</h2><a href="#" data-section="orders" class="btn btn-ghost btn-sm" id="viewAllOrders">View all</a></div>
+            <div class="card-body table-wrap">
+              <table class="data-table">
+                <thead><tr><th>Order ID</th><th>Customer</th><th>Date</th><th>Total</th><th>Status</th></tr></thead>
+                <tbody id="recentOrdersBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Orders -->
+        <section class="dash-section" id="sec-orders">
+          <div class="card">
+            <div class="card-header">
+              <h2>All Orders</h2>
+              <div class="search-box">
+                <span class="icon">&#128269;</span>
+                <input type="text" id="orderSearch" placeholder="Search orders..." />
+              </div>
+            </div>
+            <div class="card-body table-wrap">
+              <table class="data-table">
+                <thead><tr><th>Order ID</th><th>Customer</th><th>Date</th><th>Total</th><th>Status</th><th>Actions</th></tr></thead>
+                <tbody id="ordersBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Customers -->
+        <section class="dash-section" id="sec-customers">
+          <div class="card">
+            <div class="card-header">
+              <h2>Customers</h2>
+              <div class="search-box">
+                <span class="icon">&#128269;</span>
+                <input type="text" id="customerSearch" placeholder="Search customers..." />
+              </div>
+            </div>
+            <div class="card-body table-wrap">
+              <table class="data-table">
+                <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Orders</th><th>Join Date</th></tr></thead>
+                <tbody id="customersBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Products -->
+        <section class="dash-section" id="sec-products">
+          <div class="card">
+            <div class="card-header">
+              <h2>Products</h2>
+              <button class="btn btn-primary btn-sm" id="addProductBtn">+ Add Product</button>
+            </div>
+            <div class="card-body table-wrap">
+              <table class="data-table">
+                <thead><tr><th>Name</th><th>Brand</th><th>Price</th><th>Stock</th><th>Status</th><th>Actions</th></tr></thead>
+                <tbody id="productsBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Settings -->
+        <section class="dash-section" id="sec-settings">
+          <div class="card" style="max-width:560px">
+            <div class="card-header"><h2>Store Settings</h2></div>
+            <div class="modal-body" style="padding:var(--space-3)">
+              <div class="form-group">
+                <label>Store Name</label>
+                <input class="form-control" type="text" value="Nexus Laptops" />
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Delivery Fee (&#8377;)</label>
+                  <input class="form-control" type="number" id="settingDeliveryFee" value="150" />
+                </div>
+                <div class="form-group">
+                  <label>Currency</label>
+                  <input class="form-control" type="text" value="INR (&#8377;)" disabled />
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Payment Method</label>
+                <input class="form-control" type="text" value="Cash on Delivery only" disabled />
+              </div>
+              <div class="alert alert-info" style="margin-top:var(--space-2)">
+                These settings are stored locally for now. Connect MongoDB Atlas to persist them across devices.
+              </div>
+              <button class="btn btn-primary" id="saveSettings">Save Settings</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product modal -->
+  <div class="modal-overlay" id="productModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="productModalTitle">Add Product</h2>
+        <button class="cart-close" id="closeProductModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="productForm">
+          <input type="hidden" id="prodId" />
+          <div class="form-group">
+            <label>Product Name *</label>
+            <input class="form-control" type="text" id="prodName" required />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Brand *</label>
+              <input class="form-control" type="text" id="prodBrand" required />
+            </div>
+            <div class="form-group">
+              <label>Price (&#8377;) *</label>
+              <input class="form-control" type="number" id="prodPrice" required min="0" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Stock *</label>
+              <input class="form-control" type="number" id="prodStock" required min="0" />
+            </div>
+            <div class="form-group">
+              <label>Status</label>
+              <select class="form-control" id="prodStatus">
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Specs</label>
+            <input class="form-control" type="text" id="prodSpecs" placeholder="Intel i7 / 16GB / 512GB SSD" />
+          </div>
+          <div class="form-group">
+            <label>Image URL</label>
+            <input class="form-control" type="url" id="prodImage" placeholder="https://..." />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="cancelProduct">Cancel</button>
+        <button class="btn btn-primary" id="saveProduct">Save Product</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Order status modal -->
+  <div class="modal-overlay" id="orderModal">
+    <div class="modal" style="max-width:420px">
+      <div class="modal-header">
+        <h2>Update Order Status</h2>
+        <button class="cart-close" id="closeOrderModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="margin-bottom:var(--space-1)">Order: <strong id="modalOrderId"></strong></p>
+        <div class="form-group">
+          <label>Status</label>
+          <select class="form-control" id="modalOrderStatus">
+            <option value="Pending">Pending</option>
+            <option value="Shipped">Shipped</option>
+            <option value="Delivered">Delivered</option>
+            <option value="Cancelled">Cancelled</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="cancelOrder">Cancel</button>
+        <button class="btn btn-primary" id="confirmOrderStatus">Update</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script type="module" src="/js/dashboard.js"></script>
+</body>
+</html>

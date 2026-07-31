@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nexus Laptops — Premium Laptops, Delivered to Your Door</title>
+  <meta name="description" content="Shop premium laptops from Nexus. Cash on Delivery available. Fast shipping across the country." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="logo">
+        <span class="logo-mark">N</span>
+        <span>Nexus<span style="color:var(--accent-400)">Laptops</span></span>
+      </a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">&#9776;</button>
+      <nav class="nav-links" id="navLinks">
+        <a href="#products">Shop</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+        <a href="/dashboard" class="btn btn-ghost btn-sm">Admin</a>
+        <a href="#" class="cart-link" id="openCart">
+          &#128722; Cart
+          <span class="cart-badge" id="cartBadge">0</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <h1>Premium laptops.<br />Power that travels with you.</h1>
+        <p>Hand-picked machines for work, creation, and play. Cash on Delivery available — pay only when it arrives at your door.</p>
+        <a href="#products" class="btn btn-accent" style="margin-top:1rem">Shop Now &rarr;</a>
+      </div>
+      <div class="hero-art">
+        <div style="font-size:0.8rem;color:var(--primary-200);text-transform:uppercase;letter-spacing:0.1em">Starting at</div>
+        <div class="price-big">&#8377;34,999</div>
+        <div style="color:var(--primary-100);font-size:0.9rem;margin-top:0.5rem">Free delivery &middot; 7-day returns &middot; COD</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Products -->
+  <main class="container">
+    <h2 class="section-title" id="products">Featured Laptops</h2>
+    <div class="product-grid" id="productGrid">
+      <!-- skeletons while loading -->
+      <div class="skeleton" style="height:340px"></div>
+      <div class="skeleton" style="height:340px"></div>
+      <div class="skeleton" style="height:340px"></div>
+      <div class="skeleton" style="height:340px"></div>
+    </div>
+
+    <!-- About -->
+    <section id="about" style="padding:var(--space-4) 0; border-top:1px solid var(--border)">
+      <h2>Why shop with Nexus</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:var(--space-2);margin-top:var(--space-2)">
+        <div class="panel-card" style="padding:var(--space-2);background:#fff;border:1px solid var(--border);border-radius:var(--radius)">
+          <div style="font-size:1.6rem">&#128230;</div>
+          <h3>Cash on Delivery</h3>
+          <p style="color:var(--text-muted);font-size:0.9rem">Pay in cash when your laptop arrives. No cards, no risk.</p>
+        </div>
+        <div class="panel-card" style="padding:var(--space-2);background:#fff;border:1px solid var(--border);border-radius:var(--radius)">
+          <div style="font-size:1.6rem">&#9889;</div>
+          <h3>Fast Shipping</h3>
+          <p style="color:var(--text-muted);font-size:0.9rem">Dispatched within 24 hours. 2-4 day delivery nationwide.</p>
+        </div>
+        <div class="panel-card" style="padding:var(--space-2);background:#fff;border:1px solid var(--border);border-radius:var(--radius)">
+          <div style="font-size:1.6rem">&#128737;</div>
+          <h3>7-Day Returns</h3>
+          <p style="color:var(--text-muted);font-size:0.9rem">Not happy? Return within 7 days for a full refund.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer" id="contact">
+    <div class="container">
+      <div class="footer-col">
+        <h4>Nexus Laptops</h4>
+        <a href="#about">About us</a>
+        <a href="#products">Shop</a>
+        <a href="/dashboard">Admin Login</a>
+      </div>
+      <div class="footer-col">
+        <h4>Support</h4>
+        <a href="#">Track Order</a>
+        <a href="#">Returns</a>
+        <a href="#">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <a href="mailto:hello@nexuslaptops.example">hello@nexuslaptops.example</a>
+        <a href="tel:+910000000000">+91 00000 00000</a>
+      </div>
+      <div class="footer-bottom">&copy; 2026 Nexus Laptops. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <!-- Cart Drawer -->
+  <div class="cart-overlay" id="cartOverlay"></div>
+  <aside class="cart-drawer" id="cartDrawer" aria-label="Shopping cart">
+    <div class="cart-header">
+      <h2>Your Cart</h2>
+      <button class="cart-close" id="closeCart" aria-label="Close cart">&times;</button>
+    </div>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-footer">
+      <div class="cart-total-row">
+        <span>Subtotal</span>
+        <span class="total" id="cartSubtotal">&#8377;0</span>
+      </div>
+      <a href="/checkout" class="btn btn-primary btn-block" id="checkoutBtn">Checkout &rarr;</a>
+    </div>
+  </aside>
+
+  <div class="toast" id="toast"></div>
+
+  <script type="module" src="/js/storefront.js"></script>
+</body>
+</html>

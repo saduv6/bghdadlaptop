@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout — Nexus Laptops</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="stylesheet" href="/css/checkout.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="logo">
+        <span class="logo-mark">N</span>
+        <span>Nexus<span style="color:var(--accent-400)">Laptops</span></span>
+      </a>
+      <nav class="nav-links">
+        <a href="/">Continue Shopping</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="checkout-layout">
+    <!-- Progress steps -->
+    <div class="steps" id="steps">
+      <div class="step active" data-step="1">
+        <span class="step-num">1</span>
+        <span>Cart Review</span>
+      </div>
+      <div class="step-connector" data-conn="1"></div>
+      <div class="step" data-step="2">
+        <span class="step-num">2</span>
+        <span>Shipping Details</span>
+      </div>
+      <div class="step-connector" data-conn="2"></div>
+      <div class="step" data-step="3">
+        <span class="step-num">3</span>
+        <span>Confirmation</span>
+      </div>
+    </div>
+
+    <div class="checkout-grid">
+      <!-- Left: step panels -->
+      <div>
+        <!-- Step 1: Cart review -->
+        <section class="checkout-panel active" id="panel1">
+          <div class="panel-card">
+            <h2>Review Your Cart</h2>
+            <div id="reviewItems"></div>
+          </div>
+          <div class="step-actions">
+            <a href="/" class="btn btn-ghost">&larr; Back to Shop</a>
+            <button class="btn btn-primary" id="toStep2">Continue to Shipping &rarr;</button>
+          </div>
+        </section>
+
+        <!-- Step 2: Shipping details -->
+        <section class="checkout-panel" id="panel2">
+          <div class="panel-card">
+            <h2>Shipping Details</h2>
+            <form id="shippingForm" novalidate>
+              <div class="form-group">
+                <label for="fullName">Full Name *</label>
+                <input class="form-control" type="text" id="fullName" name="fullName" required placeholder="Aarav Sharma" />
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="email">Email *</label>
+                  <input class="form-control" type="email" id="email" name="email" required placeholder="you@example.com" />
+                </div>
+                <div class="form-group">
+                  <label for="phone">Phone *</label>
+                  <input class="form-control" type="tel" id="phone" name="phone" required placeholder="9876543210" pattern="[0-9+\s-]{8,15}" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="address">Full Address *</label>
+                <textarea class="form-control" id="address" name="address" required placeholder="House no, Street, Area, Landmark"></textarea>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="city">City *</label>
+                  <input class="form-control" type="text" id="city" name="city" required placeholder="Mumbai" />
+                </div>
+                <div class="form-group">
+                  <label for="pincode">Pincode *</label>
+                  <input class="form-control" type="text" id="pincode" name="pincode" required placeholder="400001" pattern="[0-9]{4,8}" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="notes">Delivery Notes (optional)</label>
+                <textarea class="form-control" id="notes" name="notes" placeholder="e.g. Call before delivery, leave at front desk"></textarea>
+              </div>
+
+              <div style="margin-top:var(--space-2);padding:var(--space-2);background:var(--success-50);border-radius:var(--radius-sm);border:1px solid #bbf7d0">
+                <div style="font-weight:700;color:var(--success-500);display:flex;align-items:center;gap:0.5rem">
+                  &#128179; Cash on Delivery
+                </div>
+                <p style="font-size:0.85rem;color:var(--text);margin-top:0.3rem">Pay in cash when your order arrives. No advance payment, no card needed.</p>
+              </div>
+            </form>
+          </div>
+          <div class="step-actions">
+            <button class="btn btn-ghost" id="backTo1">&larr; Back</button>
+            <button class="btn btn-primary" id="placeOrder">Place Order &rarr;</button>
+          </div>
+        </section>
+
+        <!-- Step 3: Confirmation -->
+        <section class="checkout-panel" id="panel3">
+          <div class="panel-card">
+            <div class="confirm-hero">
+              <div class="confirm-icon">&#10004;</div>
+              <h2>Order Confirmed!</h2>
+              <p style="color:var(--text-muted)">Thank you for your purchase. We'll call you shortly to confirm delivery.</p>
+              <div class="order-number" id="orderNumber">LS-XXXXXX</div>
+            </div>
+            <div class="confirm-details" id="confirmDetails"></div>
+            <div style="text-align:center;margin-top:var(--space-2)">
+              <a href="/" class="btn btn-primary">Continue Shopping</a>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Right: order summary (sticky) -->
+      <aside class="summary-card" id="summaryCard">
+        <h3>Order Summary</h3>
+        <div id="summaryItems"></div>
+        <div class="summary-divider"></div>
+        <div class="summary-line muted"><span>Items</span><span id="sumItems">0</span></div>
+        <div class="summary-line"><span>Subtotal</span><span id="sumSubtotal">&#8377;0</span></div>
+        <div class="summary-line"><span>Delivery Fee</span><span id="sumDelivery">&#8377;150</span></div>
+        <div class="summary-divider"></div>
+        <div class="summary-total"><span>Total</span><span id="sumTotal">&#8377;0</span></div>
+        <div class="cod-pill">&#128179; Cash on Delivery</div>
+      </aside>
+    </div>
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  <script type="module" src="/js/checkout.js"></script>
+</body>
+</html>

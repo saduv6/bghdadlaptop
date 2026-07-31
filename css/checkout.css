@@ -1,0 +1,58 @@
+/* Checkout-specific styles */
+
+.checkout-layout { max-width: 1100px; margin: 0 auto; padding: var(--space-3) var(--space-2) var(--space-6); }
+
+/* Progress steps */
+.steps { display: flex; align-items: center; justify-content: center; gap: 0; margin-bottom: var(--space-4); flex-wrap: wrap; }
+.step { display: flex; align-items: center; gap: 0.6rem; color: var(--text-muted); font-weight: 600; font-size: 0.92rem; }
+.step-num {
+  width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--neutral-200); color: var(--text-muted); font-weight: 700; transition: all 0.25s;
+}
+.step.active .step-num { background: var(--primary-600); color: #fff; box-shadow: 0 0 0 4px rgba(52,81,127,0.15); }
+.step.active { color: var(--primary-700); }
+.step.done .step-num { background: var(--success-500); color: #fff; }
+.step.done { color: var(--success-500); }
+.step-connector { flex: 0 0 40px; height: 2px; background: var(--neutral-200); margin: 0 0.5rem; }
+.step-connector.done { background: var(--success-500); }
+
+.checkout-grid { display: grid; gap: var(--space-3); grid-template-columns: 1fr 360px; align-items: start; }
+@media (max-width: 820px) { .checkout-grid { grid-template-columns: 1fr; } }
+
+.checkout-panel { display: none; }
+.checkout-panel.active { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+.panel-card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: var(--space-3); }
+.panel-card h2 { margin-bottom: var(--space-2); font-size: 1.2rem; }
+
+/* Cart review items */
+.review-item { display: flex; gap: var(--space-1); padding: var(--space-1) 0; border-bottom: 1px solid var(--neutral-100); }
+.review-item:last-child { border-bottom: none; }
+.review-item img { width: 72px; height: 72px; object-fit: cover; border-radius: 8px; background: var(--neutral-100); }
+.review-item-info { flex: 1; min-width: 0; }
+.review-item-name { font-weight: 600; }
+.review-item-specs { font-size: 0.82rem; color: var(--text-muted); }
+.review-item-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 0.3rem; }
+.review-item-qty { font-size: 0.85rem; color: var(--text-muted); }
+.review-item-price { font-weight: 700; color: var(--primary-700); }
+
+/* Summary box */
+.summary-card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: var(--space-2); position: sticky; top: 80px; }
+.summary-card h3 { font-size: 1.05rem; margin-bottom: var(--space-1); }
+.summary-line { display: flex; justify-content: space-between; padding: 0.45rem 0; font-size: 0.92rem; color: var(--text); }
+.summary-line.muted { color: var(--text-muted); font-size: 0.85rem; }
+.summary-divider { border-top: 1px dashed var(--border); margin: 0.5rem 0; }
+.summary-total { display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: 800; color: var(--primary-700); padding-top: 0.4rem; }
+.cod-pill { display: inline-flex; align-items: center; gap: 0.4rem; background: var(--success-50); color: var(--success-500); padding: 0.5rem 0.9rem; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.9rem; margin-top: 0.5rem; }
+
+.step-actions { display: flex; justify-content: space-between; margin-top: var(--space-3); gap: var(--space-1); }
+
+/* Confirmation */
+.confirm-hero { text-align: center; padding: var(--space-4) var(--space-2); }
+.confirm-icon { width: 72px; height: 72px; border-radius: 50%; background: var(--success-50); color: var(--success-500); display: grid; place-items: center; margin: 0 auto var(--space-1); font-size: 2.2rem; }
+.order-number { font-family: var(--font-mono); font-size: 1.3rem; font-weight: 800; color: var(--primary-700); background: var(--primary-50); padding: 0.4rem 1rem; border-radius: var(--radius-sm); display: inline-block; margin: 0.5rem 0; }
+.confirm-details { text-align: left; max-width: 480px; margin: var(--space-2) auto 0; }
+.confirm-detail-row { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--neutral-100); font-size: 0.92rem; }
+.confirm-detail-row .label { color: var(--text-muted); }
+.confirm-detail-row .value { font-weight: 600; }
